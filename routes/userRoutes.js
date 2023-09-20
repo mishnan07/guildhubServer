@@ -1,0 +1,51 @@
+import express from 'express';
+import { Register,EditProfile,Login,Home,GoogleLogin,GetPost,userDetails,Like,Comments,
+         ClientDetails,Following,GetQuestion,likeQuestion,questionComment,
+         DeletePost,SavePost,Report,otpLogin,sendOtp,verifyOtp,resetPassword} from '../controllers/userController.js';
+import { getRequirements,Hiring } from '../controllers/requirementController.js';
+import { authMiddleware as auth } from '../middleware/auth.js';
+import { createChat, findChat, userChats } from '../controllers/chatController.js';
+import { addMessage, getMessage } from '../controllers/messageController.js';
+const userRoute = express.Router()
+
+userRoute.post('/register',Register);
+userRoute.post('/login',Login)
+userRoute.get('/',auth,Home)
+userRoute.post('/googleLogin',GoogleLogin)
+userRoute.post('/otpLogin',otpLogin)
+userRoute.post('/sendOtp',sendOtp)
+userRoute.post('/verifyOtp',verifyOtp)
+userRoute.post('/resetPassword',resetPassword)
+
+userRoute.get('/getPost',auth,GetPost)
+userRoute.get('/userDetails',auth,userDetails)
+userRoute.get('/clientDetails',auth,ClientDetails)
+userRoute.post('/like',auth,Like)
+userRoute.post('/comment',auth,Comments)
+userRoute.post('/deletePost',auth,DeletePost)
+userRoute.post('/savePost',auth,SavePost)
+userRoute.post('/report',auth,Report)
+
+
+userRoute.get('/getQuestion',auth,GetQuestion)
+userRoute.post('/likeQuestion',auth,likeQuestion)
+userRoute.post('/following',auth,Following)
+userRoute.post('/questionComment',auth,questionComment)
+
+userRoute.get('/requirement',getRequirements)
+userRoute.post('/hiring',Hiring)
+userRoute.post('/editProfile',EditProfile)
+
+userRoute.post('/createChat',createChat)
+userRoute.get('/chat/:userId',userChats)
+userRoute.get('/find/:firstId/:secondId',findChat)
+
+userRoute.post('/addMessage',addMessage)
+userRoute.get('/:chatId',getMessage)
+
+
+
+
+
+
+export default userRoute;
