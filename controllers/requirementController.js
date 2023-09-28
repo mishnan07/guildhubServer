@@ -43,6 +43,17 @@ export const getRequirements = async (req, res) => {
     }
   };
 
+  export const hiredPros = async (req,res)=>{
+    try {
+      const id  =  req.params.id
+      const response = await requirementModel.findOne({_id:id})
+      const hiredPro = response.hired
+      res.status(200).json({hiredPro})
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
 
   export const interested = async (req, res) => {
     try {
@@ -63,7 +74,7 @@ export const getRequirements = async (req, res) => {
         { $push: { interesteds: userId  } }
       );
       
-      res.status(200).json({ message: 'Successful' });
+      res.status(200).json({ message: 'Successful',recieverId:document.userId });
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
@@ -88,7 +99,7 @@ export const getRequirements = async (req, res) => {
         { $push: { hired: userId  } }
       );
       
-      res.status(200).json({ message: 'Successful' });
+      res.status(200).json({ message: 'Successful',senderId:document.userId });
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }

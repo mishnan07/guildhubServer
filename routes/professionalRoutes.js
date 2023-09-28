@@ -11,6 +11,7 @@ import { dirname } from 'path';
 import path from 'path';
 import { Home } from '../controllers/userController.js';
 import { authMiddleware as auth } from '../middleware/auth.js';
+import { editeQuestion } from '../controllers/quesionController.js';
 
 
 // Get the current file's directory path
@@ -31,6 +32,8 @@ proRoute.post('/register', Register);
 proRoute.post('/login',LoginPro)
 proRoute.post('/upload',auth, upload.array('image'), Upload);
 proRoute.post('/quesionUpload', upload.array('image'), quesionUpload);
+proRoute.post('/editeQuestion', upload.array('image'),editeQuestion)
+
 proRoute.post('/uploadRequirement',upload.single('image'),uploadRequirement)
 proRoute.post('/profilePic',upload.single('image'),profilePic)
 

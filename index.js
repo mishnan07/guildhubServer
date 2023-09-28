@@ -5,10 +5,62 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 
+import {Server} from 'socket.io'
+import http from 'http'
+import adminRouter from './routes/adminRoutes.js'
+import userRouter from './routes/userRoutes.js'
+import proRouter from './routes/professionalRoutes.js'
+import { log } from 'console'
+import { updateNotification } from './controllers/notificationController.js'
+import { messageUpdate } from './controllers/chatsController.js'
+
+
+
 dotenv.config()
 // app.use (express.static (path.join (__dirname, '/public')))
 
 const app = express()
+
+const server = http.createServer(app)
+
+const io=new Server(server,{
+    cors: {
+      origin:"http://localhost:5173",
+      methods:["GET","POST"]
+    }
+  })
+  
+
+
+  io.on("connection", (socket) => {
+    console.log('connected----------------------');
+
+  
+  
+    socket.on('connected', (arg) => {
+      console.log(arg, 'test');
+    });
+  
+    socket.on('message', (a) => {
+      console.log(a, 'aaaaaaaaaaaaaaaaaaaaaaa');
+    });
+  
+    socket.on('chatRoom', (newMessage) => {
+      io.emit(newMessage.receiverId, newMessage);
+      messageUpdate(newMessage)
+    });
+
+    socket.on('notification',(receiverId,itemId,senderId,senderType,text)=>{
+       console.log(receiverId,itemId,senderId,senderType,`${itemId}like----------==9999999+++++///////`);
+        io.emit(receiverId,itemId,senderId,senderType,text)
+        updateNotification(receiverId,itemId, senderId, senderType,text)
+    })
+    socket.on('some',(aa)=>{
+        console.log(aa,'xxxxxxxxxxxx sssssssss rr');
+    })
+  });
+  
+
 app.use(express.json({limit:'30mb',extended:true}))
 app.use(morgan('dev'))
 app.use(express.urlencoded({limit:'30mb',extended:true}))
@@ -16,9 +68,7 @@ app.use(cors())
 app.use(express.static('public'))
 app.use(cookieParser())
 
-import adminRouter from './routes/adminRoutes.js'
-import userRouter from './routes/userRoutes.js'
-import proRouter from './routes/professionalRoutes.js'
+
 
 app.use('/admin',adminRouter)
 app.use('/',userRouter)
@@ -34,8 +84,7 @@ mongoose.connect(databaseUrl,{
     useUnifiedTopology:true
 }).then(()=>{
    
-app.listen(port,()=>{
+    server.listen(port,()=>{
     console.log(`express app listening on port${port}` );
 })
 }).catch((error)=>{console.log(`${error} did not connect`);})
-

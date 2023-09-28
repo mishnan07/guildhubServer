@@ -78,6 +78,22 @@ export const ClientDetails = async (req, res) => {
     }
   };
 
+  export const detailsUserPro = async(req,res)=>{
+    try {
+      const userId  = req.params.userId
+      let user =await userModel.findOne({_id:userId})
+      if(!user){
+        user = await proModel.findOne({_id:userId})
+      }
+      console.log(user,'pppppppp');
+      if(user){
+        res.status(200).json({user})
+      }
+    } catch (error) {
+      res.status(500).json({error:error.message})
+    }
+  }
+
 
 export const Register = async(req,res)=>{
     try {
@@ -320,6 +336,7 @@ export const EditProfile = async (req, res) => {
       const { name } = findUser;
   
       const userResponse = {
+        id:findUser._id,
         status: true,
         message: 'Successfully logged in',
         token,
@@ -425,7 +442,8 @@ export const Like = async (req, res) => {
       const postId = req.body.postId;
       const userId = req.body.userId;
       const post = await postModel.findOne({ _id: postId });
-      
+      let action = ''
+      const proId = post.proId
   
       if (!post) {
         return res.status(404).json({ error: "Post not found" });
@@ -441,17 +459,18 @@ export const Like = async (req, res) => {
         if (existingLike.liked) {
           existingLike.liked = false;
           post.likes.pull(existingLike._id);
-         
+         action = 'unlike'
         } else {
           existingLike.liked = true;
         }
       } else {
         post.likes.push({ userId, liked: true });
+        action= 'like'
       }
   
       await postModel.updateOne({ _id: postId }, post);
   
-      return res.status(200).json({ message: "Like status updated successfully", post });
+      return res.status(200).json({ message: "Like status updated successfully", proId ,action});
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal server error" });
@@ -499,15 +518,16 @@ export const Like = async (req, res) => {
  
   
 export const Comments = async(req,res)=>{
+  console.log('hhhhhhhhhhhhh');
     try {
-        let {comment,postId,userId,userType} = req.body 
-       console.log('userId',userType);
+        let {text,postId,userId,userType} = req.body 
+       console.log('userId',text,postId,userId,userType);
       
        const newComment =  await postCommentModel.create({
         userType:userType,
         userId:userId,
         post:postId,
-        content:comment
+        content:text
        })
         res.status(200).json({data:'ok'})
     } catch (error) {
@@ -582,9 +602,19 @@ export const questionComment = async(req,res)=>{
        })
         res.status(200).json({data:'ok'})
     } catch (error) {
-        res.status(400).json({ error: error.message });       
+        res.status(500).json({ error: error.message });       
          console.log(error.message);
     }
+}
+
+export const deleteQuestion =  async(req,res)=>{
+  try {
+    const  {id} = req.body
+    const response = await QuestionModel.deleteOne({_id:id})
+    res.status(200).json({message:'successfully deleted'})
+  } catch (error) {
+    res.status(500).json({ error: error.message });       
+  }
 }
 
 

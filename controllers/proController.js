@@ -42,7 +42,8 @@ export const LoginPro = async (req, res) => {
       status: false,
       message: null,
       token:null,
-      name:null
+      name:null,
+      id:null
   }
   try {
       const userDetails = req.body;
@@ -63,6 +64,7 @@ export const LoginPro = async (req, res) => {
               userSignUp.token = token;
               userSignUp.name = findUser.name;       
               userSignUp.message = "sucessfully logged";
+              userSignUp.id = findUser._id
 
               const obj = {
                   token,
