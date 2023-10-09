@@ -103,6 +103,7 @@ export const Register = async(req,res)=>{
        
         if(user.length === 0){
             userDetails.password = await bcrypt.hash(userDetails.password,10)
+            console.log(userDetails.location,'userDetails.location');
             await userModel.create({
                 name:userDetails.name,
                 email:userDetails.email,
@@ -232,7 +233,6 @@ export const otpLogin = async (req, res) => {
   };
 
   export const resetPassword = async(req,res)=>{
-    console.log(req.body.phone,'aaaqqppppppppppppppppppp');
     try {
       const { phone, newPassword } = req.body;
   
@@ -312,7 +312,6 @@ export const EditProfile = async (req, res) => {
       }
   
       if (!findUser) {
-        console.log('lllllllllllllll');
         return res.json({ status: false, message: 'User not found' });
       }
   
@@ -327,7 +326,6 @@ export const EditProfile = async (req, res) => {
        else if(phone){
         isPasswordMatch = true
        }
-  console.log(isPasswordMatch,'pppppppp');
       if (!isPasswordMatch) {
         return res.status(401).json({ status: false, message: 'Password does not match' });
       }
@@ -399,7 +397,6 @@ export const Home = async (req,res,next)=>{
 // 70458012518=============== checkMobile =============
 export const checkMobile = async (req,res)=>{
     try {
-        console.log('lllllllllllllllllllll');
         const {newPhone} = req.body
         const user = await userModel.findOne({phone: newPhone})
         if(user){
@@ -435,6 +432,19 @@ export const GetPost = async (req,res)=>{
     } catch (error) {
         res.status(500).json({message:'error fetching image url',error:error.message})
     }
+}
+
+
+
+export const usersAndpros = async (req,res)=>{
+  try {
+
+  const pros = await proModel.find({})
+  const users = await userModel.find({})
+    res.status(200).json({pros,users});
+  } catch (error) {
+    res.status(500).json({message:'error fetching image url',error:error.message})
+  }
 }
 
 export const Like = async (req, res) => {
@@ -518,7 +528,6 @@ export const Like = async (req, res) => {
  
   
 export const Comments = async(req,res)=>{
-  console.log('hhhhhhhhhhhhh');
     try {
         let {text,postId,userId,userType} = req.body 
        console.log('userId',text,postId,userId,userType);
@@ -547,6 +556,7 @@ export const DeletePost= async(req,res)=>{
 }
 
 
+
 export const SavePost = async(req,res)=>{
     try {
         let {postId,userId,Type} = req.body;
@@ -570,6 +580,37 @@ export const SavePost = async(req,res)=>{
 
     }
 }
+
+
+export const getSavedPost = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userType = req.params.type
+    console.log(userId,userType,'ppp');
+    const modal = userType === 'users' ? userModel : proModel
+    const user = await modal.findOne({ _id: userId });
+    const saveds = user.savedPost.map((savedItem) => savedItem.postId);
+
+    const posts = await postModel.find({ _id: { $in: saveds } });
+console.log(posts);
+    res.status(200).json({ savedPosts: posts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const getPostPosted = async(req,res)=>{
+  try {
+    const userId = req.params.userId
+    const post = await postModel.find({proId:userId})
+    res.status(200).json({ post: post });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+
+  }
+}
+
 
 
 export const Report = async(req,res)=>{

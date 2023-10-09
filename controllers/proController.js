@@ -117,7 +117,6 @@ export const Upload = async (req, res) => {
         proId:req.body.userId
       });
   
-      // Save the image post
       await imagePost.save();
     
       res.status(201).json({ message: 'Image uploaded successfully' });
@@ -127,6 +126,19 @@ export const Upload = async (req, res) => {
     }
   };
 
+
+  
+export const editPost = async(req,res)=>{
+  try {
+    const postId = req.body.postId
+    const message = req.body.message
+    const post = await Image.updateOne({_id:postId},{message:message})
+    console.log(postId,message,'ssssssssssss');
+    res.status(200).json({message:'successfully update'})
+  } catch (error) {
+    res.status(500).json({error:error.message})
+  }
+}
 
 
   export const quesionUpload = async (req, res) => {

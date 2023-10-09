@@ -5,6 +5,8 @@ import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
+import { GetPost, usersAndpros } from "../controllers/userController.js";
+import { GetCategory } from "../controllers/proController.js";
 
 
 const adminRoute = express.Router()
@@ -24,13 +26,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+adminRoute.get('/getPost',auth,GetPost)
+adminRoute.get('/usersAndpros',auth,usersAndpros)
+
 adminRoute.get('/home',auth,Home)
 adminRoute.post('/login',Login)
-adminRoute.post("/addCategory", upload.single("image"),AddCategory)
-adminRoute.post('/deleteCategory',deleteCategory)
+adminRoute.post("/addCategory",auth,upload.single("image"),AddCategory)
+adminRoute.get('/getCategory',auth,GetCategory)
+adminRoute.post('/deleteCategory',auth,deleteCategory)
 
-adminRoute.post('/blockPost',BlockPost)
-adminRoute.post('/blockUser',BlockUser)
+adminRoute.post('/blockPost',auth,BlockPost)
+adminRoute.post('/blockUser',auth,BlockUser)
 
-
+ 
 export default adminRoute

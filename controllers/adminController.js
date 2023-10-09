@@ -48,6 +48,7 @@ export const Login = async (req, res) => {
 
 
 export const AddCategory = async (req, res) => {
+  console.log('kkkkkkk9999');
   const { categoryName } = req.body;
   const imageBase64String = req.file ? req.file.filename : null;
 
@@ -104,17 +105,22 @@ export const BlockUser = async (req, res) => {
   try {
     const {userID,userType} = req.body
     const model = userType ==='users'?userModel:proModel
-
+    let message
     const user = await model.findOne({ _id: userID });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    if(user.isBanned === true){
+      message= 'Successfully Unblock user'
+    }else if(user.isBanned === false){
+       message= 'Successfully Block user'
+    }
     const updatedIsBanned = !user.isBanned;
 
     await model.updateOne({ _id: userID }, { isBanned: updatedIsBanned });
 
-    res.status(200).json({ message: 'Successfully updated isBanned status', isBanned: updatedIsBanned });
+    res.status(200).json({ message, isBanned: updatedIsBanned });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

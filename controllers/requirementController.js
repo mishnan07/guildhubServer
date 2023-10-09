@@ -14,7 +14,6 @@ export const uploadRequirement = async(req,res)=>{
     try {
         const { message, budget, location, userId } = req.body;
         const image = req.file ? req.file.filename : ''; // Check if an image was uploaded
-    console.log(message,'ppppppppppppp');
         const newRequirement = new requirementModel({
           requirement: message,
           image:image,

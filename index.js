@@ -37,9 +37,7 @@ const io=new Server(server,{
 
   
   
-    socket.on('connected', (arg) => {
-      console.log(arg, 'test');
-    });
+ 
   
     socket.on('message', (a) => {
       console.log(a, 'aaaaaaaaaaaaaaaaaaaaaaa');
@@ -55,10 +53,17 @@ const io=new Server(server,{
         io.emit(receiverId,itemId,senderId,senderType,text)
         updateNotification(receiverId,itemId, senderId, senderType,text)
     })
-    socket.on('some',(aa)=>{
-        console.log(aa,'xxxxxxxxxxxx sssssssss rr');
+ 
+
+    socket.on('online',(userId,onlineType)=>{
+      io.emit('ListOnline', userId,onlineType)
+      console.log(userId,'userId',onlineType);
+
     })
   });
+
+
+
   
 
 app.use(express.json({limit:'30mb',extended:true}))
