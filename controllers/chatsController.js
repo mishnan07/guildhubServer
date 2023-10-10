@@ -12,12 +12,10 @@ const reciverId = msg.receiverId;
   
   .then((chatDocument) => {
     if (!chatDocument) {
-console.log('no dczzzzzzzzzz');
         chatDocument = new ChatModels({
         members: [senderId, reciverId],
         messages: [], 
       });
-      console.log(chatDocument,'newww   =========dcss');
     }
 
     const newChatMessage = {
