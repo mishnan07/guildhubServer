@@ -5,6 +5,8 @@ import QuestionModel from '../models/questionModel.js'
 import { generateAuthToken } from '../middleware/auth.js'
 import categoryModel from '../models/categoryModel.js'
 import userModel from '../models/userModel.js'
+import cloudinary from '../cofig/cloudinary.js'
+import fs from 'fs'
 
 
 export const Register = async (req,res)=>{
@@ -94,37 +96,48 @@ export const LoginPro = async (req, res) => {
 
 
 export const Upload = async (req, res) => {
-    try {
-      let message =  req.body.message
-      let images = [];
-      for (let i = 0; i < req.files.length; i++) {
-        images[i] = req.files[i].filename;
-      }
-
-      for (let i = 0; i < req.files.length; i++) {
-        var mediaMIME = req.files[i].mimetype;
-  
-        if (mediaMIME.startsWith('image/')) {
-          var img = images        }
-        else if (mediaMIME.startsWith('video/')) {
-          var vid = images
-        }
-      }
-      const imagePost = new Image({
-        image: img,
-        video:vid,
-        message:message,
-        proId:req.body.userId
-      });
-  
-      await imagePost.save();
+  try {
+    let message =  req.body.message
+    const uploadedFiles = req.files;
+    let uploadedImages = [];
     
-      res.status(201).json({ message: 'Image uploaded successfully' });
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      res.status(500).json({ message: 'Error uploading image' });
+
+    if (uploadedFiles) {
+      for (const file of uploadedFiles) {
+        const upload = await cloudinary.uploader.upload(file.path);
+        uploadedImages.push(upload.secure_url);
+
+        // Delete
+        fs.unlinkSync(file.path);
+      }
     }
-  };
+
+    let img = []
+    let vid = []
+    for (let i = 0; i < req.files.length; i++) {
+      var mediaMIME = req.files[i].mimetype;
+
+      if (mediaMIME.startsWith('image/')) {
+         img = uploadedImages        }
+      else if (mediaMIME.startsWith('video/')) {
+         vid = uploadedImages
+      }
+    }
+    const imagePost = new Image({
+      image: img,
+      video:vid,
+      message:message,
+      proId:req.body.userId
+    });
+
+    await imagePost.save();
+  
+    res.status(201).json({ message: 'Image uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).json({ message: 'Error uploading image' });
+  }
+};
 
 
   
