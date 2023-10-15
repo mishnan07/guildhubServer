@@ -25,7 +25,7 @@ const server = http.createServer(app)
 
 const io=new Server(server,{
     cors: {
-      origin:"http://localhost:5173",
+      origin:"https://guildhub-client.vercel.app/",
       methods:["GET","POST","PATCH"]
     }
   })
@@ -33,14 +33,12 @@ const io=new Server(server,{
 
 
   io.on("connection", (socket) => {
-    console.log('connected----------------------');
 
   
   
  
   
     socket.on('message', (a) => {
-      console.log(a, 'aaaaaaaaaaaaaaaaaaaaaaa');
     });
   
     socket.on('chatRoom', (newMessage) => {
@@ -49,7 +47,6 @@ const io=new Server(server,{
     });
 
     socket.on('notification',(receiverId,itemId,senderId,senderType,text)=>{
-       console.log(receiverId,itemId,senderId,senderType,`${itemId}like----------==9999999+++++///////`);
         io.emit(receiverId,itemId,senderId,senderType,text)
         updateNotification(receiverId,itemId, senderId, senderType,text)
     })
