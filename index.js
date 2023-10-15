@@ -25,7 +25,7 @@ const server = http.createServer(app)
 
 const io=new Server(server,{
     cors: {
-      origin:"https://guildhub-client.vercel.app/",
+      origin:"https://guildhub-client.vercel.app",
       methods:["GET","POST","PATCH"]
     }
   })
