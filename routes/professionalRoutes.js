@@ -73,7 +73,7 @@ proRoute.get('/getReteandReview/:proId/:LogedUserId',auth,getReteandReview)
 
 proRoute.post('/',auth, Home);
 
-proRoute.get('/getCategory',auth,GetCategory)
+proRoute.get('/getCategory',GetCategory)
 proRoute.post('/intersted',auth,interested)
 
 export default proRoute;

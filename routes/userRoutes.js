@@ -68,7 +68,7 @@ userRoute.post('/editProfile',auth,EditProfile)
 userRoute.post('/quesionUpload',auth, upload.array('image'), quesionUpload);
 userRoute.post('/editeQuestion',auth, upload.array('image'),editeQuestion);
 userRoute.post('/uploadRequirement',auth,upload.single('image'),uploadRequirement)
-userRoute.get('/getCategory',auth,GetCategory)
+userRoute.get('/getCategory',GetCategory)
 
 
 

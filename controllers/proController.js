@@ -7,6 +7,7 @@ import categoryModel from '../models/categoryModel.js'
 import userModel from '../models/userModel.js'
 import cloudinary from '../cofig/cloudinary.js'
 import fs from 'fs';
+import { log } from 'console'
 
 
 
@@ -195,6 +196,7 @@ export const editPost = async(req,res)=>{
 
   export const GetCategory = async (req,res)=>{
     try {
+      console.log('kkkkkkkkkkk');
       const category =await categoryModel.find()
       res.status(200).json({category})
     } catch (error) {
