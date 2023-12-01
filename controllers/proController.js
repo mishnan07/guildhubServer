@@ -10,7 +10,6 @@ import fs from 'fs';
 import { log } from 'console'
 
 
-
 export const Register = async (req,res)=>{
     try {
         let proData = req.body
