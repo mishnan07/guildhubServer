@@ -70,10 +70,10 @@ proRoute.get('/FetchChats/:id/:receiverId',auth,FetchChats)
 proRoute.get('/FetchNotification/:id',auth,FetchNotification)
 proRoute.get('/getReteandReview/:proId/:LogedUserId',auth,getReteandReview)
 
-
+proRoute.get('/getCategory',GetCategory)
 proRoute.post('/',auth, Home);
 
-proRoute.get('/getCategory',GetCategory)
+
 proRoute.post('/intersted',auth,interested)
 
 export default proRoute;
