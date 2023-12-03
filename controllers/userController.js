@@ -8,20 +8,26 @@ import postCommentModel from "../models/postComment.js";
 import jwt from "jsonwebtoken";
 import QuestionModel from "../models/questionModel.js";
 import questionCommentModel from "../models/questionComment.js";
+import dotenv from 'dotenv'
 
 
-import dotenv from 'dotenv';
-dotenv.config();
 
 import twilio from 'twilio';
+dotenv.config()
+
+const secretKey = process.env.SECRET_KEY
+
 
 const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_VERIFY_SERVICE_SID,
-} = process.env;
-
-const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+    TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN,
+    TWILIO_VERIFY_SERVICE_SID,
+  } = process.env;
+  
+  const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
+    lazyLoading: true,
+  });
+  
 
 
 
@@ -149,9 +155,7 @@ export const otpLogin = async (req, res) => {
         // Ensure the phoneNumber includes the country code
         let phoneNumber = req.body.phoneNumber;
         const user = await userModel.findOne({ phone:phoneNumber })
-        console.log(user,'====zzz');
           if(!user){
-            console.log('keriiii');
             return res.json({
                 success: false,
                 message: `Not registerd phone:`,
@@ -160,7 +164,6 @@ export const otpLogin = async (req, res) => {
         if (!phoneNumber.startsWith('+')) {
           phoneNumber = `+91${phoneNumber}`; // Assuming it's an Indian number
         }
-    console.log(phoneNumber,'ph');
         // Send OTP using the Verify Service
         const otpResponse = await client.verify
           .services(TWILIO_VERIFY_SERVICE_SID)
@@ -174,7 +177,6 @@ export const otpLogin = async (req, res) => {
           message: 'OTP sent successfully',
           otpResponse,
         });
-        console.log();
       } catch (error) {
         console.error('Error sending OTP:', error.message);
         res.status(500).json({
@@ -204,7 +206,6 @@ export const otpLogin = async (req, res) => {
           to: formattedPhoneNumber,
           code: otp,
         });
-  console.log(verificationCheck,'vvvv');
       if (verificationCheck.status === 'approved') {
         res.status(200).json({
           success: true,
