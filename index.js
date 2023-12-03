@@ -10,7 +10,6 @@ import http from 'http'
 import adminRouter from './routes/adminRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import proRouter from './routes/professionalRoutes.js'
-import { log } from 'console'
 import { updateNotification } from './controllers/notificationController.js'
 import { messageUpdate } from './controllers/chatsController.js'
 

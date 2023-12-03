@@ -8,26 +8,20 @@ import postCommentModel from "../models/postComment.js";
 import jwt from "jsonwebtoken";
 import QuestionModel from "../models/questionModel.js";
 import questionCommentModel from "../models/questionComment.js";
-import dotenv from 'dotenv'
 
 
+import dotenv from 'dotenv';
+dotenv.config();
 
 import twilio from 'twilio';
-dotenv.config()
-
-const secretKey = process.env.SECRET_KEY
-
 
 const {
-    TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN,
-    TWILIO_VERIFY_SERVICE_SID,
-  } = process.env;
-  
-  const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  TWILIO_VERIFY_SERVICE_SID,
+} = process.env;
 
-  
-  
+const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 
 

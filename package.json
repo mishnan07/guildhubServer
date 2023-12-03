@@ -26,6 +26,6 @@
     "nodemon": "^3.0.1",
     "socket.io": "^4.7.2",
     "tw-elements": "^1.0.0",
-    "twilio": "^4.17.0"
+    "twilio": "^4.19.3"
   }
 }

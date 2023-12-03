@@ -6,7 +6,6 @@ import { generateAuthToken } from '../middleware/auth.js'
 import categoryModel from '../models/categoryModel.js'
 import userModel from '../models/userModel.js'
 import fs from 'fs';
-import { log } from 'console'
 import cloudinary from '../cofig/Cloudinary.js'
 
 export const Register = async (req,res)=>{
