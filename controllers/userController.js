@@ -24,9 +24,9 @@ const {
     TWILIO_VERIFY_SERVICE_SID,
   } = process.env;
   
-  const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
-    lazyLoading: true,
-  });
+  const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {});
+
+  
   
 
 
