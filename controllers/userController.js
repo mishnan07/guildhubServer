@@ -1,11 +1,9 @@
-import { token } from "morgan";
 import { generateAuthToken } from "../middleware/auth.js";
 import userModel from "../models/userModel.js";
 import bcrypt from 'bcrypt'
 import proModel from "../models/proModel.js";
 import postModel from '../models/postModel.js'
 import postCommentModel from "../models/postComment.js";
-import { json } from "express";
 
 import jwt from "jsonwebtoken";
 import QuestionModel from "../models/questionModel.js";
