@@ -146,7 +146,6 @@ export const otpLogin = async (req, res) => {
 
 
 
-
 export const sendOtp = async (req, res) => {
   try {
     // Ensure the phoneNumber includes the country code
