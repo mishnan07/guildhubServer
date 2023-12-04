@@ -164,13 +164,14 @@ export const sendOtp = async (req, res) => {
     }
     // Send OTP using the Verify Service
     const otpResponse = await client.verify
-      .v2.services(TWILIO_VERIFY_SERVICE_SID) // Change to v2.services
+      .v2.services(TWILIO_VERIFY_SERVICE_SID)
       .verifications.create({
         to: phoneNumber,
         channel: 'sms',
       });
 
     console.log(otpResponse, TWILIO_VERIFY_SERVICE_SID);
+
     res.status(200).json({
       success: true,
       message: 'OTP sent successfully',
@@ -198,7 +199,7 @@ export const verifyOtp = async (req, res) => {
 
     // Verify the OTP
     const verificationCheck = await client.verify
-      .v2.services(TWILIO_VERIFY_SERVICE_SID) // Change to v2.services
+      .v2.services(TWILIO_VERIFY_SERVICE_SID)
       .verificationChecks.create({
         to: formattedPhoneNumber,
         code: otp,
@@ -224,6 +225,8 @@ export const verifyOtp = async (req, res) => {
     });
   }
 };
+
+
 
   export const resetPassword = async(req,res)=>{
     try {
