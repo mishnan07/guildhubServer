@@ -19,15 +19,12 @@ const secretKey = process.env.SECRET_KEY
 
 
 const {
-    TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN,
-    TWILIO_VERIFY_SERVICE_SID,
-  } = process.env;
-  
-  const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
-    lazyLoading: true,
-  });
-  
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  TWILIO_VERIFY_SERVICE_SID,
+} = process.env;
+
+const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 
 
@@ -150,85 +147,83 @@ export const otpLogin = async (req, res) => {
 
 
 
-  export const sendOtp = async (req, res) => {
-    try {
-        // Ensure the phoneNumber includes the country code
-        let phoneNumber = req.body.phoneNumber;
-        const user = await userModel.findOne({ phone:phoneNumber })
-          if(!user){
-            return res.json({
-                success: false,
-                message: `Not registerd phone:`,
-              });
-          }
-          console.log(user,'kkkkkkkkk');
-        if (!phoneNumber.startsWith('+')) {
-          phoneNumber = `+91${phoneNumber}`; // Assuming it's an Indian number
-        }
-        // Send OTP using the Verify Service
-        const otpResponse = await client.verify
-          .services(TWILIO_VERIFY_SERVICE_SID)
-          .verifications.create({
-            to: phoneNumber,
-            channel: 'sms',
-          });
-
-    console.log(otpResponse,TWILIO_VERIFY_SERVICE_SID);
-        res.status(200).json({
-          success: true,
-          message: 'OTP sent successfully',
-          otpResponse,
-        });
-      } catch (error) {
-        console.log('send');
-        console.error('Error sending OTP:', error.message);
-        res.status(500).json({
-          success: false,
-          message: `Failed to send OTP: ${error.message}`,
-        });
-      }
-  };
-
-
-
-  export const verifyOtp = async (req, res) => {
-    try {
-      const { TWILIO_VERIFY_SERVICE_SID } = process.env;
-      const { verificationSid, otp, phoneNumber } = req.body;
-  
-      // Ensure the phoneNumber includes the country code
-      let formattedPhoneNumber = phoneNumber;
-      if (!formattedPhoneNumber.startsWith('+')) {
-        formattedPhoneNumber = `+91${formattedPhoneNumber}`; // Assuming it's an Indian number
-      }
-  
-      // Verify the OTP
-      const verificationCheck = await client.verify
-        .services(TWILIO_VERIFY_SERVICE_SID)
-        .verificationChecks.create({
-          to: formattedPhoneNumber,
-          code: otp,
-        });
-      if (verificationCheck.status === 'approved') {
-        res.status(200).json({
-          success: true,
-          message: 'OTP verified successfully',
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          message: 'Invalid OTP',
-        });
-      }
-    } catch (error) {
-      console.log('verify');
-      console.error('Error verifying OTP:', error.message);
-      res.status(500).json({
+export const sendOtp = async (req, res) => {
+  try {
+    // Ensure the phoneNumber includes the country code
+    let phoneNumber = req.body.phoneNumber;
+    const user = await userModel.findOne({ phone: phoneNumber });
+    if (!user) {
+      return res.json({
         success: false,
-        message: `Failed to verify OTP: ${error.message}`,
+        message: `Not registered phone:`,
       });
     }
-  };
+    console.log(user, 'kkkkkkkkk');
+    if (!phoneNumber.startsWith('+')) {
+      phoneNumber = `+91${phoneNumber}`; // Assuming it's an Indian number
+    }
+    // Send OTP using the Verify Service
+    const otpResponse = await client.verify
+      .v2.services(TWILIO_VERIFY_SERVICE_SID) // Change to v2.services
+      .verifications.create({
+        to: phoneNumber,
+        channel: 'sms',
+      });
+
+    console.log(otpResponse, TWILIO_VERIFY_SERVICE_SID);
+    res.status(200).json({
+      success: true,
+      message: 'OTP sent successfully',
+      otpResponse,
+    });
+  } catch (error) {
+    console.log('send');
+    console.error('Error sending OTP:', error.message);
+    res.status(500).json({
+      success: false,
+      message: `Failed to send OTP: ${error.message}`,
+    });
+  }
+};
+
+export const verifyOtp = async (req, res) => {
+  try {
+    const { verificationSid, otp, phoneNumber } = req.body;
+
+    // Ensure the phoneNumber includes the country code
+    let formattedPhoneNumber = phoneNumber;
+    if (!formattedPhoneNumber.startsWith('+')) {
+      formattedPhoneNumber = `+91${formattedPhoneNumber}`; // Assuming it's an Indian number
+    }
+
+    // Verify the OTP
+    const verificationCheck = await client.verify
+      .v2.services(TWILIO_VERIFY_SERVICE_SID) // Change to v2.services
+      .verificationChecks.create({
+        to: formattedPhoneNumber,
+        code: otp,
+      });
+
+    if (verificationCheck.status === 'approved') {
+      res.status(200).json({
+        success: true,
+        message: 'OTP verified successfully',
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid OTP',
+      });
+    }
+  } catch (error) {
+    console.log('verify');
+    console.error('Error verifying OTP:', error.message);
+    res.status(500).json({
+      success: false,
+      message: `Failed to verify OTP: ${error.message}`,
+    });
+  }
+};
 
   export const resetPassword = async(req,res)=>{
     try {
