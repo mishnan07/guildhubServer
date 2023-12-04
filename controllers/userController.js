@@ -161,6 +161,7 @@ export const otpLogin = async (req, res) => {
                 message: `Not registerd phone:`,
               });
           }
+          console.log(user,'kkkkkkkkk');
         if (!phoneNumber.startsWith('+')) {
           phoneNumber = `+91${phoneNumber}`; // Assuming it's an Indian number
         }
@@ -171,6 +172,7 @@ export const otpLogin = async (req, res) => {
             to: phoneNumber,
             channel: 'sms',
           });
+
     console.log(otpResponse,TWILIO_VERIFY_SERVICE_SID);
         res.status(200).json({
           success: true,
@@ -178,6 +180,7 @@ export const otpLogin = async (req, res) => {
           otpResponse,
         });
       } catch (error) {
+        console.log('send');
         console.error('Error sending OTP:', error.message);
         res.status(500).json({
           success: false,
@@ -218,6 +221,7 @@ export const otpLogin = async (req, res) => {
         });
       }
     } catch (error) {
+      console.log('verify');
       console.error('Error verifying OTP:', error.message);
       res.status(500).json({
         success: false,
