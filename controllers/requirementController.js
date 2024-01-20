@@ -1,10 +1,6 @@
-import bycrpt from 'bcrypt'
 import proModel from '../models/proModel.js'
 import requirementModel from '../models/requirementModel.js'
-import Image from '../models/postModel.js'
-import QuestionModel from '../models/questionModel.js'
-import { generateAuthToken } from '../middleware/auth.js'
-import categoryModel from '../models/categoryModel.js'
+
 import userModel from "../models/userModel.js";
 
 

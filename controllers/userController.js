@@ -94,6 +94,7 @@ export const ClientDetails = async (req, res) => {
 export const Register = async(req,res)=>{
     try {
         let userDetails = req.body;
+        console.log(req.file,'ppppppppppppp');
         const user = await userModel.find({email:userDetails.email})
         
        
@@ -142,7 +143,6 @@ export const otpLogin = async (req, res) => {
         res.status(500).json({ errMsg: "Server Error" })
     }
 }
-
 
 
 
